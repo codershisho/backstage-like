@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+
+# build
+.nuxt/
+.output/
+dist/
+
+# environment
+.env
+.env.*
+!.env.example
+
+# logs
+*.log
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# test
+coverage/
+
+# Drizzle
+drizzle/meta/
