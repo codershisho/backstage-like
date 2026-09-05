@@ -5,16 +5,14 @@ import {
   timestamp,
   uuid,
   varchar,
-} from 'drizzle-orm/pg-core';
+} from 'drizzle-orm/pg-core'
 
-import { services } from './services.js';
+import { services } from './services.js'
 
 export const serviceLinks = pgTable(
   'service_links',
   {
-    id: uuid('id')
-      .primaryKey()
-      .defaultRandom(),
+    id: uuid('id').primaryKey().defaultRandom(),
 
     serviceId: uuid('service_id')
       .notNull()
@@ -22,11 +20,9 @@ export const serviceLinks = pgTable(
 
     name: varchar('name', {
       length: 255,
-    })
-      .notNull(),
+    }).notNull(),
 
-    url: text('url')
-      .notNull(),
+    url: text('url').notNull(),
 
     createdAt: timestamp('created_at', {
       withTimezone: true,
@@ -44,8 +40,5 @@ export const serviceLinks = pgTable(
       withTimezone: true,
     }),
   },
-  (table) => [
-    index('idx_service_links_service_id')
-      .on(table.serviceId),
-  ],
-);
+  (table) => [index('idx_service_links_service_id').on(table.serviceId)],
+)

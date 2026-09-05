@@ -1,24 +1,24 @@
-import dotenv from 'dotenv';
+import dotenv from 'dotenv'
 
-import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
+import { drizzle } from 'drizzle-orm/postgres-js'
+import postgres from 'postgres'
 
-import * as schema from './schema/index.js';
+import * as schema from './schema/index.js'
 
 dotenv.config({
   path: '../../.env',
-});
+})
 
-const connectionString = process.env.DATABASE_URL;
+const connectionString = process.env.DATABASE_URL
 
 if (!connectionString) {
-  throw new Error('DATABASE_URL is not defined');
+  throw new Error('DATABASE_URL is not defined')
 }
 
-const client = postgres(connectionString);
+const client = postgres(connectionString)
 
 export const db = drizzle(client, {
   schema,
-});
+})
 
-export * from './schema/index.js';
+export * from './schema/index.js'

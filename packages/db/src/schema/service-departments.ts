@@ -1,12 +1,7 @@
-import {
-  pgTable,
-  primaryKey,
-  timestamp,
-  uuid,
-} from 'drizzle-orm/pg-core';
+import { pgTable, primaryKey, timestamp, uuid } from 'drizzle-orm/pg-core'
 
-import { departments } from './departments.js';
-import { services } from './services.js';
+import { departments } from './departments.js'
+import { services } from './services.js'
 
 export const serviceDepartments = pgTable(
   'service_departments',
@@ -31,10 +26,7 @@ export const serviceDepartments = pgTable(
   },
   (table) => [
     primaryKey({
-      columns: [
-        table.serviceId,
-        table.departmentId,
-      ],
+      columns: [table.serviceId, table.departmentId],
     }),
   ],
-);
+)

@@ -1,12 +1,7 @@
-import {
-  pgTable,
-  primaryKey,
-  timestamp,
-  uuid,
-} from 'drizzle-orm/pg-core';
+import { pgTable, primaryKey, timestamp, uuid } from 'drizzle-orm/pg-core'
 
-import { apis } from './apis.js';
-import { services } from './services.js';
+import { apis } from './apis.js'
+import { services } from './services.js'
 
 export const serviceApiCalls = pgTable(
   'service_api_calls',
@@ -31,10 +26,7 @@ export const serviceApiCalls = pgTable(
   },
   (table) => [
     primaryKey({
-      columns: [
-        table.serviceId,
-        table.apiId,
-      ],
+      columns: [table.serviceId, table.apiId],
     }),
   ],
-);
+)

@@ -8,24 +8,30 @@ import {
   deleteService,
 } from '../repositories/service-repository.js'
 
-const ServiceSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string(),
-  description: z.string(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-  deletedAt: z.string().nullable(),
-}).openapi('Service')
+const ServiceSchema = z
+  .object({
+    id: z.string().uuid(),
+    name: z.string(),
+    description: z.string(),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+    deletedAt: z.string().nullable(),
+  })
+  .openapi('Service')
 
-const CreateServiceSchema = z.object({
-  name: z.string().min(1).max(255),
-  description: z.string().min(1),
-}).openapi('CreateService')
+const CreateServiceSchema = z
+  .object({
+    name: z.string().min(1).max(255),
+    description: z.string().min(1),
+  })
+  .openapi('CreateService')
 
-const UpdateServiceSchema = z.object({
-  name: z.string().min(1).max(255),
-  description: z.string().min(1),
-}).openapi('UpdateService')
+const UpdateServiceSchema = z
+  .object({
+    name: z.string().min(1).max(255),
+    description: z.string().min(1),
+  })
+  .openapi('UpdateService')
 
 const ServiceIdParamSchema = z.object({
   id: z.string().uuid(),
@@ -162,16 +168,19 @@ const servicesRoute = new OpenAPIHono()
 servicesRoute.openapi(serviceListRoute, async (c) => {
   const result = await findActiveServices()
 
-  return c.json({
-    services: result.map((service) => ({
-      id: service.id,
-      name: service.name,
-      description: service.description,
-      createdAt: service.createdAt.toISOString(),
-      updatedAt: service.updatedAt.toISOString(),
-      deletedAt: service.deletedAt?.toISOString() ?? null,
-    })),
-  }, 200)
+  return c.json(
+    {
+      services: result.map((service) => ({
+        id: service.id,
+        name: service.name,
+        description: service.description,
+        createdAt: service.createdAt.toISOString(),
+        updatedAt: service.updatedAt.toISOString(),
+        deletedAt: service.deletedAt?.toISOString() ?? null,
+      })),
+    },
+    200,
+  )
 })
 
 servicesRoute.openapi(serviceCreateRoute, async (c) => {
@@ -182,14 +191,17 @@ servicesRoute.openapi(serviceCreateRoute, async (c) => {
     description: body.description,
   })
 
-  return c.json({
-    id: service.id,
-    name: service.name,
-    description: service.description,
-    createdAt: service.createdAt.toISOString(),
-    updatedAt: service.updatedAt.toISOString(),
-    deletedAt: service.deletedAt?.toISOString() ?? null,
-  }, 201)
+  return c.json(
+    {
+      id: service.id,
+      name: service.name,
+      description: service.description,
+      createdAt: service.createdAt.toISOString(),
+      updatedAt: service.updatedAt.toISOString(),
+      deletedAt: service.deletedAt?.toISOString() ?? null,
+    },
+    201,
+  )
 })
 
 servicesRoute.openapi(serviceGetRoute, async (c) => {
@@ -198,19 +210,25 @@ servicesRoute.openapi(serviceGetRoute, async (c) => {
   const service = await findActiveServiceById(id)
 
   if (!service) {
-    return c.json({
-      message: 'Service not found',
-    }, 404)
+    return c.json(
+      {
+        message: 'Service not found',
+      },
+      404,
+    )
   }
 
-  return c.json({
-    id: service.id,
-    name: service.name,
-    description: service.description,
-    createdAt: service.createdAt.toISOString(),
-    updatedAt: service.updatedAt.toISOString(),
-    deletedAt: service.deletedAt?.toISOString() ?? null,
-  }, 200)
+  return c.json(
+    {
+      id: service.id,
+      name: service.name,
+      description: service.description,
+      createdAt: service.createdAt.toISOString(),
+      updatedAt: service.updatedAt.toISOString(),
+      deletedAt: service.deletedAt?.toISOString() ?? null,
+    },
+    200,
+  )
 })
 
 servicesRoute.openapi(serviceUpdateRoute, async (c) => {
@@ -223,19 +241,25 @@ servicesRoute.openapi(serviceUpdateRoute, async (c) => {
   })
 
   if (!service) {
-    return c.json({
-      message: 'Service not found',
-    }, 404)
+    return c.json(
+      {
+        message: 'Service not found',
+      },
+      404,
+    )
   }
 
-  return c.json({
-    id: service.id,
-    name: service.name,
-    description: service.description,
-    createdAt: service.createdAt.toISOString(),
-    updatedAt: service.updatedAt.toISOString(),
-    deletedAt: service.deletedAt?.toISOString() ?? null,
-  }, 200)
+  return c.json(
+    {
+      id: service.id,
+      name: service.name,
+      description: service.description,
+      createdAt: service.createdAt.toISOString(),
+      updatedAt: service.updatedAt.toISOString(),
+      deletedAt: service.deletedAt?.toISOString() ?? null,
+    },
+    200,
+  )
 })
 
 servicesRoute.openapi(serviceDeleteRoute, async (c) => {
@@ -244,13 +268,15 @@ servicesRoute.openapi(serviceDeleteRoute, async (c) => {
   const service = await deleteService(id)
 
   if (!service) {
-    return c.json({
-      message: 'Service not found',
-    }, 404)
+    return c.json(
+      {
+        message: 'Service not found',
+      },
+      404,
+    )
   }
 
   return c.body(null, 204)
 })
-
 
 export { servicesRoute }

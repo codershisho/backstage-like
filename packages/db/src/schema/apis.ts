@@ -6,16 +6,14 @@ import {
   unique,
   uuid,
   varchar,
-} from 'drizzle-orm/pg-core';
+} from 'drizzle-orm/pg-core'
 
-import { services } from './services.js';
+import { services } from './services.js'
 
 export const apis = pgTable(
   'apis',
   {
-    id: uuid('id')
-      .primaryKey()
-      .defaultRandom(),
+    id: uuid('id').primaryKey().defaultRandom(),
 
     serviceId: uuid('service_id')
       .notNull()
@@ -23,13 +21,11 @@ export const apis = pgTable(
 
     name: varchar('name', {
       length: 255,
-    })
-      .notNull(),
+    }).notNull(),
 
     version: varchar('version', {
       length: 100,
-    })
-      .notNull(),
+    }).notNull(),
 
     openapiUrl: text('openapi_url'),
 
@@ -54,13 +50,8 @@ export const apis = pgTable(
     }),
   },
   (table) => [
-    unique('uq_apis_name_version')
-      .on(
-        table.name,
-        table.version,
-      ),
+    unique('uq_apis_name_version').on(table.name, table.version),
 
-    index('idx_apis_service_id')
-      .on(table.serviceId),
+    index('idx_apis_service_id').on(table.serviceId),
   ],
-);
+)

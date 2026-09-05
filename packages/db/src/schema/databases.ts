@@ -5,37 +5,30 @@ import {
   timestamp,
   uuid,
   varchar,
-} from 'drizzle-orm/pg-core';
+} from 'drizzle-orm/pg-core'
 
 export const databases = pgTable(
   'databases',
   {
-    id: uuid('id')
-      .primaryKey()
-      .defaultRandom(),
+    id: uuid('id').primaryKey().defaultRandom(),
 
     name: varchar('name', {
       length: 255,
-    })
-      .notNull(),
+    }).notNull(),
 
     type: varchar('type', {
       length: 100,
-    })
-      .notNull(),
+    }).notNull(),
 
     host: varchar('host', {
       length: 255,
-    })
-      .notNull(),
+    }).notNull(),
 
-    port: integer('port')
-      .notNull(),
+    port: integer('port').notNull(),
 
     databaseName: varchar('database_name', {
       length: 255,
-    })
-      .notNull(),
+    }).notNull(),
 
     createdAt: timestamp('created_at', {
       withTimezone: true,
@@ -53,8 +46,5 @@ export const databases = pgTable(
       withTimezone: true,
     }),
   },
-  (table) => [
-    index('idx_databases_name')
-      .on(table.name),
-  ],
-);
+  (table) => [index('idx_databases_name').on(table.name)],
+)
