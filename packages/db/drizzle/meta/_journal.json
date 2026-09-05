@@ -8,6 +8,13 @@
       "when": 1787325077444,
       "tag": "0000_little_chameleon",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788391238082,
+      "tag": "0001_shallow_rattler",
+      "breakpoints": true
     }
   ]
 }

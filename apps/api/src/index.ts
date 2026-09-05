@@ -1,48 +1,30 @@
 import { serve } from '@hono/node-server'
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi'
-import { z } from 'zod'
-import { findUserById } from '@backstage-like/db'
 import { Scalar } from '@scalar/hono-api-reference'
+import { z } from 'zod'
+import { findActiveServices } from '@backstage-like/db'
 
 const app = new OpenAPIHono()
 
-const UserSchema = z.object({
-  id: z.string().openapi({
-    example: 'user-001',
-  }),
-  name: z.string().openapi({
-    example: 'Taro',
-  }),
-  email: z.email().openapi({
-    example: 'taro@example.com',
-  }),
-}).openapi('User')
+const ServiceSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  description: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  deletedAt: z.string().nullable(),
+}).openapi('Service')
 
-const userRoute = createRoute({
+const serviceListRoute = createRoute({
   method: 'get',
-  path: '/api/v1/users/{id}',
-  request: {
-    params: z.object({
-      id: z.string().openapi({
-        example: 'user-001',
-      }),
-    }),
-  },
+  path: '/api/v1/services',
   responses: {
     200: {
-      description: 'User information',
-      content: {
-        'application/json': {
-          schema: UserSchema,
-        },
-      },
-    },
-    404: {
-      description: 'User not found',
+      description: 'List of services',
       content: {
         'application/json': {
           schema: z.object({
-            message: z.string(),
+            services: z.array(ServiceSchema),
           }),
         },
       },
@@ -50,18 +32,19 @@ const userRoute = createRoute({
   },
 })
 
-app.openapi(userRoute, async (c) => {
-  const { id } = c.req.valid('param')
+app.openapi(serviceListRoute, async (c) => {
+  const result = await findActiveServices()
 
-  const user = await findUserById(id)
-
-  if (!user) {
-    return c.json({
-      message: 'User not found',
-    }, 404)
-  }
-
-  return c.json(user, 200)
+  return c.json({
+    services: result.map((service) => ({
+      id: service.id,
+      name: service.name,
+      description: service.description,
+      createdAt: service.createdAt.toISOString(),
+      updatedAt: service.updatedAt.toISOString(),
+      deletedAt: service.deletedAt?.toISOString() ?? null,
+    })),
+  }, 200)
 })
 
 app.get('/health', (c) => {

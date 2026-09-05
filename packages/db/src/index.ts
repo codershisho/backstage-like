@@ -1,27 +1,32 @@
-import postgres from 'postgres'
-import { drizzle } from 'drizzle-orm/postgres-js'
-import { eq } from 'drizzle-orm'
+import dotenv from 'dotenv';
 
-import { users } from './schema/users.js'
+import { isNull } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 
-const connectionString = process.env.DATABASE_URL
+import * as schema from './schema/index.js';
+
+dotenv.config({
+  path: '../../.env',
+});
+
+const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-  throw new Error('DATABASE_URL is not set')
+  throw new Error('DATABASE_URL is not defined');
 }
 
-const client = postgres(connectionString)
+const client = postgres(connectionString);
 
-export const db = drizzle(client)
+export const db = drizzle(client, {
+  schema,
+});
 
-export async function findUserById(id: string) {
-  const result = await db
+export async function findActiveServices() {
+  return db
     .select()
-    .from(users)
-    .where(eq(users.id, id))
-    .limit(1)
-
-  return result[0] ?? null
+    .from(schema.services)
+    .where(isNull(schema.services.deletedAt));
 }
 
-export { users }
+export * from './schema/index.js';
