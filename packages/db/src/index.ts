@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 
-import { isNull } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
@@ -21,12 +20,5 @@ const client = postgres(connectionString);
 export const db = drizzle(client, {
   schema,
 });
-
-export async function findActiveServices() {
-  return db
-    .select()
-    .from(schema.services)
-    .where(isNull(schema.services.deletedAt));
-}
 
 export * from './schema/index.js';

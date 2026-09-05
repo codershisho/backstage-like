@@ -1,51 +1,11 @@
 import { serve } from '@hono/node-server'
-import { OpenAPIHono, createRoute } from '@hono/zod-openapi'
+import { OpenAPIHono } from '@hono/zod-openapi'
 import { Scalar } from '@scalar/hono-api-reference'
-import { z } from 'zod'
-import { findActiveServices } from '@backstage-like/db'
+import { servicesRoute } from './routes/services.js'
 
 const app = new OpenAPIHono()
 
-const ServiceSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string(),
-  description: z.string(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-  deletedAt: z.string().nullable(),
-}).openapi('Service')
-
-const serviceListRoute = createRoute({
-  method: 'get',
-  path: '/api/v1/services',
-  responses: {
-    200: {
-      description: 'List of services',
-      content: {
-        'application/json': {
-          schema: z.object({
-            services: z.array(ServiceSchema),
-          }),
-        },
-      },
-    },
-  },
-})
-
-app.openapi(serviceListRoute, async (c) => {
-  const result = await findActiveServices()
-
-  return c.json({
-    services: result.map((service) => ({
-      id: service.id,
-      name: service.name,
-      description: service.description,
-      createdAt: service.createdAt.toISOString(),
-      updatedAt: service.updatedAt.toISOString(),
-      deletedAt: service.deletedAt?.toISOString() ?? null,
-    })),
-  }, 200)
-})
+app.route('/api/v1/services', servicesRoute)
 
 app.get('/health', (c) => {
   return c.json({
